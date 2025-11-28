@@ -17,3 +17,5 @@ Simple chat application built with Flutter. Features real-time messaging, live t
 - Flutter
 - Firebase Firestore
 - Material Design
+- intl
+- Grouped ListView
