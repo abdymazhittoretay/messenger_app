@@ -19,7 +19,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        surfaceTintColor: Colors.black,
+        surfaceTintColor: Colors.grey,
         titleSpacing: 0,
         title: Row(
           children: [
