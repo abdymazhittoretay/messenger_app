@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:intl/intl.dart';
 import 'package:messenger_app/database/db.dart';
 import 'package:messenger_app/models/chat_model.dart';
 import 'package:messenger_app/models/message_model.dart';
@@ -90,7 +91,7 @@ class _ChatPageState extends State<ChatPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "${message.time.day.toString().padLeft(2, "0")}.${message.time.month.toString().padLeft(2, "0")}.${message.time.year}",
+                            _formatTime(message.time),
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
@@ -123,7 +124,7 @@ class _ChatPageState extends State<ChatPage> {
                                     ),
                                   ),
                                   Text(
-                                    "  ${message.time.hour.toString().padLeft(2, "0")}:${message.time.minute.toString().padLeft(2, "0")}",
+                                    '  ${DateFormat('HH:mm').format(message.time)}',
                                     style: TextStyle(
                                       fontSize: 12.0,
                                       color: message.isMine
@@ -196,5 +197,19 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
     );
+  }
+
+  String _formatTime(DateTime time) {
+    final now = DateTime.now();
+    final diff = now.difference(time);
+
+    if (diff.inMinutes < 1) return 'Только что';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} минуты назад';
+    if (diff.inHours < 24 && time.day == now.day) {
+      return DateFormat('HH:mm').format(time);
+    }
+    if (diff.inDays < 2) return 'Вчера';
+    if (diff.inDays < 7) return DateFormat('EEE', 'ru').format(time);
+    return DateFormat('dd.MM.yy').format(time);
   }
 }

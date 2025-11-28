@@ -137,8 +137,9 @@ class _HomePageState extends State<HomePage> {
 
     if (diff.inMinutes < 1) return 'Только что';
     if (diff.inMinutes < 60) return '${diff.inMinutes} минуты назад';
-    if (diff.inHours < 24 && time.day == now.day)
+    if (diff.inHours < 24 && time.day == now.day) {
       return DateFormat('HH:mm').format(time);
+    }
     if (diff.inDays < 2) return 'Вчера';
     if (diff.inDays < 7) return DateFormat('EEE', 'ru').format(time);
     return DateFormat('dd.MM.yy').format(time);
