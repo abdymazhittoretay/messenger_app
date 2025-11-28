@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:messenger_app/models/chat_model.dart';
 import 'package:messenger_app/models/message_model.dart';
 
-class DB {
+class FirestoreDB {
   static final _instance = FirebaseFirestore.instance;
 
   static Stream<List<ChatModel>> getChats() {
