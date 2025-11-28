@@ -55,6 +55,24 @@ class GroupedList extends StatelessWidget {
                       color: message.isMine ? Colors.white70 : Colors.black54,
                     ),
                   ),
+                  if (message.status == 1 && message.isMine)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4.0, bottom: 2.0),
+                      child: Icon(
+                        Icons.done,
+                        size: 14.0,
+                        color: Colors.white70
+                      ),
+                    )
+                  else if (message.status == 2 && message.isMine)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4.0, bottom: 2.0),
+                      child: Icon(
+                        Icons.done_all,
+                        size: 14.0,
+                        color: Colors.white70
+                      ),
+                    ),
                 ],
               ),
             ),
