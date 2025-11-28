@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/database/db.dart';
 import 'package:messenger_app/models/chat_model.dart';
+import 'package:messenger_app/pages/chat_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage ({super.key});
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +20,22 @@ class HomePage extends StatelessWidget {
       body: StreamBuilder<List<ChatModel>>(
         stream: FirestoreDB.getChats(),
         builder: (context, snapshot) {
-          
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: Colors.blue,));
+            return Center(child: CircularProgressIndicator(color: Colors.blue));
           } else if (snapshot.hasError) {
-            return Center(child: Text('Ошибка загрузки чатов', style: TextStyle(color: Colors.red, fontSize: 24.0),));
+            return Center(
+              child: Text(
+                'Ошибка загрузки чатов',
+                style: TextStyle(color: Colors.red, fontSize: 24.0),
+              ),
+            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Нет чатов', style: TextStyle(color: Colors.grey, fontSize: 24.0),));
+            return Center(
+              child: Text(
+                'Нет чатов',
+                style: TextStyle(color: Colors.grey, fontSize: 24.0),
+              ),
+            );
           }
 
           final chats = snapshot.data!;
@@ -34,9 +44,14 @@ class HomePage extends StatelessWidget {
             itemCount: chats.length,
             itemBuilder: (context, i) {
               final chat = chats[i];
-              return GestureDetector(
+              return InkWell(
                 onTap: () {
-                  // (**) navigate to the chat page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(chat: chat),
+                    ),
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -83,15 +98,17 @@ class HomePage extends StatelessWidget {
                               ],
                             ),
                             SizedBox(height: 2),
-                            chat.lastMsg.isNotEmpty ? Text(
-                              'Вы: ${chat.lastMsg}',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey[600],
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ) : SizedBox.shrink(),
+                            chat.lastMsg.isNotEmpty
+                                ? Text(
+                                    'Вы: ${chat.lastMsg}',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.grey[600],
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                : SizedBox.shrink(),
                           ],
                         ),
                       ),
