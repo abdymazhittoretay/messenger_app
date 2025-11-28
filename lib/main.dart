@@ -19,6 +19,11 @@ class MainApp extends StatelessWidget {
       title: 'The Messenger',
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Colors.blue,
+          selectionColor: Colors.blue.withValues(alpha: 0.4),
+          selectionHandleColor: Colors.blue,
+        ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
