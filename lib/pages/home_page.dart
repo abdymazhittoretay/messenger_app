@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:messenger_app/database/db.dart';
 import 'package:messenger_app/models/chat_model.dart';
 import 'package:messenger_app/pages/chat_page.dart';
+import 'package:messenger_app/widgets/live_time_text.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,9 +52,7 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                       builder: (context) => ChatPage(chat: chat),
                     ),
-                  ).then((_) {
-                    setState(() {});
-                  });
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -96,13 +89,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                 ),
-                                Text(
-                                  _formatTime(chat.time),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
+                                LiveTimeText(time: chat.time),
                               ],
                             ),
                             SizedBox(height: 2),
@@ -129,19 +116,5 @@ class _HomePageState extends State<HomePage> {
         },
       ),
     );
-  }
-
-  String _formatTime(DateTime time) {
-    final now = DateTime.now();
-    final diff = now.difference(time);
-
-    if (diff.inMinutes < 1) return 'Только что';
-    if (diff.inMinutes < 60) return '${diff.inMinutes} минуты назад';
-    if (diff.inHours < 24 && time.day == now.day) {
-      return DateFormat('HH:mm').format(time);
-    }
-    if (diff.inDays < 2) return 'Вчера';
-    if (diff.inDays < 7) return DateFormat('EEE', 'ru').format(time);
-    return DateFormat('dd.MM.yy').format(time);
   }
 }
