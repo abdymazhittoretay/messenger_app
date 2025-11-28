@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:messenger_app/database/db.dart';
 import 'package:messenger_app/models/chat_model.dart';
 import 'package:messenger_app/models/message_model.dart';
@@ -70,11 +71,61 @@ class _ChatPageState extends State<ChatPage> {
                         ),
                       );
                     }
-          
-                    return Placeholder();
+
+                    final List<MessageModel> messages = snapshot.data!.reversed
+                        .toList();
+
+                    return GroupedListView<MessageModel, DateTime>(
+                      reverse: true,
+                      order: GroupedListOrder.DESC,
+                      elements: messages,
+                      groupBy: (message) => DateTime(
+                        message.time.year,
+                        message.time.month,
+                        message.time.day,
+                      ),
+                      groupHeaderBuilder: (MessageModel message) => Center(
+                        child: Card(
+                          color: Colors.blue,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "${message.time.day.toString().padLeft(2, "0")} ${message.time.month.toString().padLeft(2, "0")} ${message.time.year}",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                      itemBuilder: (context, MessageModel message) {
+                        return Align(
+                          alignment: message.isMine
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Card(
+                            color: message.isMine
+                                ? Colors.blue
+                                : Colors.grey[300],
+                            elevation: 5.0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                message.text,
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  color: message.isMine
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
                   },
                 ),
               ),
+              SizedBox(height: 12),
               Row(
                 children: [
                   IconButton(
