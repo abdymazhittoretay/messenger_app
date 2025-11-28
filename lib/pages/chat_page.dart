@@ -19,6 +19,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.black,
         titleSpacing: 0,
         title: Row(
           children: [
@@ -106,14 +107,31 @@ class _ChatPageState extends State<ChatPage> {
                             elevation: 5.0,
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                message.text,
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  color: message.isMine
-                                      ? Colors.white
-                                      : Colors.black,
-                                ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      message.text,
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        color: message.isMine
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "  ${message.time.hour.toString().padLeft(2, "0")}:${message.time.minute.toString().padLeft(2, "0")}",
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      color: message.isMine
+                                          ? Colors.white70
+                                          : Colors.black54,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -123,7 +141,7 @@ class _ChatPageState extends State<ChatPage> {
                   },
                 ),
               ),
-              SizedBox(height: 12.0,),
+              SizedBox(height: 12.0),
               Row(
                 children: [
                   IconButton(
@@ -153,10 +171,7 @@ class _ChatPageState extends State<ChatPage> {
                         ),
                         onSubmitted: (value) {
                           if (value.trim().isEmpty) return;
-                          FirestoreDB.sendMessage(
-                            widget.chat.id,
-                            value.trim(),
-                          );
+                          FirestoreDB.sendMessage(widget.chat.id, value.trim());
                           _messageController.clear();
                         },
                       ),
