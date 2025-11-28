@@ -13,6 +13,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  final TextEditingController _messageController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,8 +74,7 @@ class _ChatPageState extends State<ChatPage> {
                       );
                     }
 
-                    final List<MessageModel> messages = snapshot.data!.reversed
-                        .toList();
+                    final List<MessageModel> messages = snapshot.data!;
 
                     return GroupedListView<MessageModel, DateTime>(
                       reverse: true,
@@ -85,14 +86,11 @@ class _ChatPageState extends State<ChatPage> {
                         message.time.day,
                       ),
                       groupHeaderBuilder: (MessageModel message) => Center(
-                        child: Card(
-                          color: Colors.blue,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "${message.time.day.toString().padLeft(2, "0")} ${message.time.month.toString().padLeft(2, "0")} ${message.time.year}",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "${message.time.day.toString().padLeft(2, "0")}.${message.time.month.toString().padLeft(2, "0")}.${message.time.year}",
+                            style: TextStyle(color: Colors.black),
                           ),
                         ),
                       ),
@@ -125,7 +123,7 @@ class _ChatPageState extends State<ChatPage> {
                   },
                 ),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: 12.0,),
               Row(
                 children: [
                   IconButton(
@@ -148,10 +146,19 @@ class _ChatPageState extends State<ChatPage> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: TextField(
+                        controller: _messageController,
                         decoration: InputDecoration(
                           hintText: 'Сообщение',
                           border: InputBorder.none,
                         ),
+                        onSubmitted: (value) {
+                          if (value.trim().isEmpty) return;
+                          FirestoreDB.sendMessage(
+                            widget.chat.id,
+                            value.trim(),
+                          );
+                          _messageController.clear();
+                        },
                       ),
                     ),
                   ),
